@@ -7,21 +7,21 @@ using namespace std;
 namespace SiriusFM {
 	class Call_Option {
 		private:
-			double const mc_exp_time;
-			double const mc_exp_cost;
+			double const m_full_exp_time;
+			double const m_exp_strike;
 		
 		public:
-			Call_Option (double exp_cost, double exp_time):
-				mc_exp_cost(exp_cost), mc_exp_time(exp_time) 
-			{if (exp_time < 0 || exp_cost <= 0) {
+			Call_Option (double exp_strike, double full_exp_time):
+				m_exp_strike(exp_strike), m_full_exp_time(full_exp_time) 
+			{if (full_exp_time < 0 || exp_strike <= 0) {
 						throw invalid_argument("Incorrect arguments");};
 		};
 		
-		double Curr_expiration(double curr_cost, double left_exp_time) {
-                                if (curr_cost <= 0 || left_exp_time < 0) {
+		double PayOff(double curr_stock) {
+                                if (curr_stock <= 0) {
                                 throw invalid_argument("Incorrect arguments");
                                 } else {
-				return max((this -> mc_exp_cost) - curr_cost * ((this -> mc_exp_time)-left_exp_time), 0.);
+				return max(curr_stock - (this -> m_exp_strike), 0.);
 				};
 				};
 		};
