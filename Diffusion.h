@@ -19,7 +19,7 @@ namespace SiriusFM {
 
 			double Mu(double st, double t) {
 				return (st*(this -> m_mu) >= 0)?st*(this -> m_mu):0;};
-			double sigma(double st, double t) {
+			double Sigma(double st, double t) {
 				return st * (this -> m_sigma);};
 	};
 };
