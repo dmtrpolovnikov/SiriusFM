@@ -6,8 +6,6 @@
 #define BUF_SIZE 128
 #define CCY_SIZE 3
 
-using namespace std;
-
 namespace SiriusFM 
 {
 
@@ -25,7 +23,7 @@ namespace SiriusFM
 		FILE* file = fopen(a_file, "r");
 		
 		if (file == nullptr)
-			throw invalid_argument(a_file);
+			throw std:: invalid_argument(a_file);
 			
 		/*while (fgets (ccy, CCY_SIZE + 1, file)) 
 			{

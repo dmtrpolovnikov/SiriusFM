@@ -1,7 +1,7 @@
 #pragma once
 #include<stdexcept>
 #include<iostream>
-using namespace std;
+
 
 namespace SiriusFM {
 	class DiffusionGBM {
@@ -13,7 +13,7 @@ namespace SiriusFM {
 			DiffusionGBM(double mu, double sigma):m_mu(mu), m_sigma(sigma)
 			
 			{if (sigma <= 0) {
-					throw invalid_argument("Incorrect values");
+					throw std:: invalid_argument("Incorrect values");
 					 };
 			};
 

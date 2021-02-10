@@ -16,9 +16,9 @@ int main (int argc, char* argv[])
 	
 	double mu = atof(argv[1]);
 	double sigma = atof(argv[2]);
-	double S0 = atof(argv[3]);
-	long T_days = atof(argv[4]);
-	int tau_min = atof(argv[5]);
+	double S0 = atof(argv[3]); // Start price
+	long T_days = atof(argv[4]); // time before expiration
+	int tau_min = atof(argv[5]); // time of 1 bar
 	long P = atof(argv[6]);  // Check mu > 0, sigma > 0, Tdays > 0, taumin > 0, P > 0
 	
 	CcyE ccyA = CcyE:: USD;
@@ -27,14 +27,19 @@ int main (int argc, char* argv[])
 	MCEngine1D<decltype(diff), decltype(IRProvider), decltype(IRProvider),
 		decltype(ccyA), decltype(ccyA)> mce(20000, 20000);
 	
-	time_t t0 = time(nullptr);
-	time_t T = t0 + T_days * 86400;
-	time_t Ty = double(T_days/365.25);
+	time_t t0 = time(nullptr);  // the real time
+	std:: cout << "t0 = " << t0 << std:: endl;
+	time_t T = t0 + T_days * 86400; // the future expiration time
+	
+	std:: cout << "T = " << T << std:: endl;
+	
+	double Ty = double(T_days/365.25); // time of pricing as a year, time_t
+	std:: cout << "Ty = " << Ty << std:: endl;
 	mce.Simulate<false> (t0, T, tau_min, S0, P, &diff, &IRProvider, &IRProvider, ccyA, ccyA);
 	
 	//Analyze the results
 	tuple res = mce.GetPaths();
-	long L1 = get<0>(res);
+	long L1 = get<0>(res); 
 	long P1 = get<1>(res);
 	double const* paths = get<2>(res);
 	double NVP = 0.0; // valid path
@@ -60,20 +65,16 @@ int main (int argc, char* argv[])
 	} // end of loop
 	
 	assert(NVP > 0);
-	cout << "NVP = " << NVP << endl;
 	EST /= double(NVP); // (mu - sigma^2/2)dt = 
 	cout << "EST = " << EST << " EST2 = " << EST2 << endl;
 	
 	//Now find variance of ST
 	double VarST = (EST2 - double(NVP) * EST * EST) / double(NVP-1); // sigma^2T
-	cout << "EST = " << EST << " EST2 = " << EST2 << endl;
-	double sigma2E = VarST / Ty;
-	cout << "EST = " << EST << " EST2 = " << EST2 << endl;
+	double sigma2E = VarST / Ty; // 
 	double muE = (EST + VarST / 2.0) / Ty;
-	cout << "EST = " << EST << " EST2 = " << EST2 << endl;
 	
-	cout << "Mu = " << mu << ", muE" << muE << endl; 
-	cout << "Sigma = " << sigma * sigma << ", sigma2E" << sigma2E << endl; 
+	cout << "Mu = " << mu << ", E[mu] = " << muE << endl; 
+	cout << "Sigma = " << sigma * sigma << ", E[sigma2] = " << sigma2E << endl; 
 	
 	// mu 0.1 sigma 0.25 s0 100 tdays 90 5 min p10000
 	

@@ -5,8 +5,6 @@
 #include <cstring>
 #include <cstdio>
 
-using namespace std;
-
 namespace SiriusFM 
 {
 	enum class CcyE 
@@ -58,7 +56,7 @@ namespace SiriusFM
 		else if (strcmp(a_Str, "RUB") == 0)
 			return CcyE:: RUB;
 		else
-			throw invalid_argument("Invalid currency!");
+			throw std:: invalid_argument("Invalid currency!");
 	};
 	
 	enum class IRModeE 

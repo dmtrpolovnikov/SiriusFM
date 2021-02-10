@@ -2,7 +2,6 @@
 #include<stdexcept>
 #include<iostream>
 #include<cmath>
-using namespace std;
 
 namespace SiriusFM
 {
@@ -16,7 +15,7 @@ namespace SiriusFM
 			DiffusionCEV (double mu, double sigma, double beta): m_mu(mu), m_sigma(sigma),
 									m_beta(beta)
 			{ if (sigma <= 0 || beta < 0 || beta > 1)
-				{throw invalid_argument("Incorrect values");};
+				{throw std:: invalid_argument("Incorrect values");};
 			};
 
 			double mu (double st, double t) {

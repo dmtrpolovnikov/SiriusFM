@@ -1,7 +1,6 @@
 #pragma once
 #include<stdexcept>
 #include<iostream>
-using namespace std;
 
 namespace SiriusGM
 {
@@ -17,7 +16,7 @@ namespace SiriusGM
 				m_mu(mu), m_sigma_1(sigma_1), m_sigma_2(sigma_2), m_sigma_3(sigma_3)
 		{if (sigma_1 <= 0 || sigma_3 <= 0 || sigma_2*sigma_2 - 4*sigma_1*sigma_3 >= 0)
 			{
-				throw invalid_argument("Incorrect values");
+				throw std:: invalid_argument("Incorrect values");
 			};
 		};
 			double mu (double st, double t) {

@@ -5,8 +5,6 @@
 #include <utility>
 #include <algorithm>
 
-using namespace std;
-
 namespace SiriusFM 
 {
 	
@@ -41,7 +39,7 @@ namespace SiriusFM
 			
 			{
 				if (m_MaxL <= 0 || m_MaxP <= 0) 
-					throw invalid_argument ("Invalid values!");
+					throw std:: invalid_argument ("Invalid values!");
 			}
 			
 			
@@ -57,10 +55,10 @@ namespace SiriusFM
 				AssetClassB a_B
 				);
 				
-			tuple<long, long, double const*> GetPaths() const
+			std:: tuple<long, long, double const*> GetPaths() const
 			{
-				return (m_L <= 0 || m_P <= 0) ? make_tuple(0, 0, nullptr) :
-					make_tuple(m_L, m_P, m_Paths);			
+				return (m_L <= 0 || m_P <= 0) ? std:: make_tuple(0, 0, nullptr) :
+					std:: make_tuple(m_L, m_P, m_Paths);			
 			}
 				
 				

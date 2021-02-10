@@ -2,7 +2,6 @@
 #include<stdexcept>
 #include<iostream>
 #include<cmath>
-using namespace std;
 
 namespace SiriusFM
 {
@@ -17,7 +16,7 @@ namespace SiriusFM
 				m_mu(mu), m_sigma(sigma), m_thetta(thetta), m_kappa(kappa)
 		{if (kappa<=0 || sigma <= 0 || thetta <= 0)
 			{
-				throw invalid_argument("Incorrect values");
+				throw std:: invalid_argument("Incorrect values");
 			};
 		};
 			double mu(double st, double t){

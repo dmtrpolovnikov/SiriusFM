@@ -3,8 +3,6 @@
 #include "IRProvider.h"
 #include <iostream>
 
-using namespace std;
-
 namespace SiriusFM 
 {
 	template <>

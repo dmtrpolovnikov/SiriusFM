@@ -6,8 +6,6 @@
 #include <utility>
 #include <algorithm>
 
-using namespace std;
-
 namespace SiriusFM 
 {
 	template <typename Diffusion1D,
@@ -30,19 +28,25 @@ namespace SiriusFM
 		{	
 		double y0 =YearFrac(a_t0);
 		//double yT = YearFracInterval(a_T);
-		
+		std:: cout << "y0 = " << y0 << std:: endl;
+		//std:: cout << "Tsec = " << Tsec << std:: endl;
 		
 		//time_t Tsec = YearFracInterval(a_T - a_t0);
-		time_t Tsec = YearFrac(a_T) - y0;
+		std:: cout << "a_T = " << YearFrac(a_T) << std:: endl;
+		time_t Tsec = (YearFrac(a_T) - y0) * 365.25 * 86400;
+		std:: cout << "Tsec = " << Tsec << std:: endl;
 	
 		int tau_sec = a_tau_min * 60;
+		std:: cout << "tau_sec = " << tau_sec << std:: endl;
 		
 		double tau = YearFracInterval(tau_sec);
+		std:: cout << "tau = " << tau << std:: endl;
 				
 		long L = (Tsec % tau_sec == 0) ? Tsec/tau_sec : Tsec/tau_sec + 1;
 				
 		
 		long P = 2 * a_P; // Antithetic variables
+		std:: cout << "P = " << P << std:: endl;
 		std:: normal_distribution <> N01(0.0,1.0);
 		std:: mt19937_64 u;
 		double stau = sqrt(tau);
@@ -51,7 +55,7 @@ namespace SiriusFM
                 	: YearFracInterval(Tsec - (L - 1) * tau_sec);
                                 
                 L++; // L is number of points, not intervals 
-                cout << "L fr mce = " << L << endl;
+                std:: cout << "L fr mce = " << L << std:: endl;
                 double slast = sqrt(tlast);
                 double mu0 = 0.0;
 		double mu1 = 0.0;
@@ -69,7 +73,7 @@ namespace SiriusFM
 
 		// Main Simulation Loop 
 		if ( L * P > m_MaxL * m_MaxP)
-			throw invalid_argument("Invalid length paths");
+			throw std:: invalid_argument("Invalid length paths");
 
 		for (long p = 0; p < a_P; p++) 
 		{
