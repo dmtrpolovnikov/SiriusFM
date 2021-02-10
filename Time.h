@@ -11,4 +11,11 @@ namespace SiriusFM
 		constexpr double SecY = 365.25 * 86400;
 		return 1970.0 + double(a_t)/SecY;
 	};
+	
+		inline double YearFracInterval (time_t a_t) 
+	{
+		// Average year in seconds
+		constexpr double SecY = 365.25 * 86400;
+		return double(a_t)/SecY;
+	};
 }

@@ -19,7 +19,8 @@ namespace SiriusFM
 		JPY = 4, 
 		CNY = 5, 
 		RUB = 6,
-		N = 7
+		ZZZ = 7,
+		N = 8
 	};
 	
 	inline char const* CcyE2Str (CcyE a_ccy)
@@ -33,7 +34,8 @@ namespace SiriusFM
 			case CcyE:: JPY : return "JPY";
 			case CcyE:: CNY : return "CNY"; 
 			case CcyE:: RUB : return "RUB";
-			default : throw invalid_argument("Invalid currency!"); 
+			case CcyE:: ZZZ : return "ZZZ";
+			default : return "USD"; //throw invalid_argument("Invalid currency!"); 
 		};
 	};
 	
@@ -51,6 +53,8 @@ namespace SiriusFM
 			return CcyE:: JPY;
 		else if (strcmp(a_Str, "CNY") == 0)
 			return CcyE:: CNY;
+		else if (strcmp(a_Str, "RUB") == 0)
+			return CcyE:: RUB;
 		else if (strcmp(a_Str, "RUB") == 0)
 			return CcyE:: RUB;
 		else

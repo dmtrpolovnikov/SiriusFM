@@ -2,6 +2,8 @@
 #include <iostream>
 #include <cmath>
 #include <cassert>
+#include <utility>
+#include <algorithm>
 
 using namespace std;
 
@@ -30,18 +32,21 @@ namespace SiriusFM
 		public:
 			MCEngine1D (long a_MaxL, long a_MaxP)
 			: m_MaxL(a_MaxL), m_MaxP(a_MaxP), 
-			m_Paths (new double [m_MaxL * m_MaxP])
-			/*m_L (0), m_P (0), m_tau (nan),m_diff (nullptr), 
+			m_Paths (new double [m_MaxL * m_MaxP]),
+			m_L (0), m_P (0) /* m_tau (nan),m_diff (nullptr), 
 		        m_rateA (nullptr), m_rateB (nullptr),
 			m_a (AssetClassA:: UNDEFINED), 
 			m_b (AssetClassB:: INDEFINED)*/
+
 			
 			{
 				if (m_MaxL <= 0 || m_MaxP <= 0) 
 					throw invalid_argument ("Invalid values!");
-			};
+			}
 			
-			void Simulate ( time_t a_t0, // Curr pricing Time
+			
+			template <bool IsRN>
+			void Simulate (time_t a_t0, // Curr pricing Time
 				time_t a_T, // Expiration Time
 				int a_tau_min, // Step in minutes
 				double a_S0, long a_P, // start point and paths
@@ -49,8 +54,20 @@ namespace SiriusFM
 				AProvider const* a_rateA,
 				BProvider const* a_rateB,
 				AssetClassA a_A,
-				AssetClassB a_B,
-				bool a_isRN);
+				AssetClassB a_B
+				);
+				
+			tuple<long, long, double const*> GetPaths() const
+			{
+				return (m_L <= 0 || m_P <= 0) ? make_tuple(0, 0, nullptr) :
+					make_tuple(m_L, m_P, m_Paths);			
+			}
+				
+				
+	MCEngine1D (MCEngine1D const&) = delete;	// in class
+	MCEngine1D& operator= (MCEngine1D const&) = delete;
 	};
+	
+	
 }
 			

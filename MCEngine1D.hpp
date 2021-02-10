@@ -3,6 +3,8 @@
 #include <random>
 #include <iostream>
 #include <cassert>
+#include <utility>
+#include <algorithm>
 
 using namespace std;
 
@@ -11,35 +13,49 @@ namespace SiriusFM
 	template <typename Diffusion1D,
 		  typename AProvider, typename BProvider,
 		  typename AssetClassA, typename AssetClassB>
+		  
+	template <bool IsRN>
 
-	inline void MCEngine1D <Diffusion1D, 
-		AProvider, BProvider,
-		AssetClassA, AssetClassB>::Simulate 
+	inline void MCEngine1D<Diffusion1D, AProvider, BProvider,
+		AssetClassA, AssetClassB>:: 
+		Simulate
 			(time_t a_t0, time_t a_T,
-			int a_tau_min, double a_S0,
-			long a_P,
+			int a_tau_min, double a_S0, long a_P,
 			Diffusion1D const* a_diff,
 			AProvider const* a_rateA,
 			BProvider const* a_rateB,
 			AssetClassA a_A,
-			AssetClassB a_B,
-			bool a_isRN
-		 )
-	{	
+			AssetClassB a_B
+			)
+		{	
 		double y0 =YearFrac(a_t0);
-		double yT = YearFrac(a_T);
+		//double yT = YearFracInterval(a_T);
 		
-		double tau = double (a_tau_min) / (365.25 * 1440.0);
-		long L = (ceil((yT - y0) / tau)) + 1; // Path length
+		
+		//time_t Tsec = YearFracInterval(a_T - a_t0);
+		time_t Tsec = YearFrac(a_T) - y0;
+	
+		int tau_sec = a_tau_min * 60;
+		
+		double tau = YearFracInterval(tau_sec);
+				
+		long L = (Tsec % tau_sec == 0) ? Tsec/tau_sec : Tsec/tau_sec + 1;
+				
+		
 		long P = 2 * a_P; // Antithetic variables
 		std:: normal_distribution <> N01(0.0,1.0);
 		std:: mt19937_64 u;
 		double stau = sqrt(tau);
-                double tlast = sqrt(yT - y0 - double(L-1) * tau);
+                
+                double tlast = (Tsec % tau_sec == 0) ? tau // Check that all tau are same
+                	: YearFracInterval(Tsec - (L - 1) * tau_sec);
+                                
+                L++; // L is number of points, not intervals 
+                cout << "L fr mce = " << L << endl;
                 double slast = sqrt(tlast);
                 double mu0 = 0.0;
 		double mu1 = 0.0;
-                assert(slast <= stau);
+                assert(0 < tlast && tlast <= tau);
                 
                 // Checks valid
 		assert(a_diff != nullptr && 
@@ -49,6 +65,7 @@ namespace SiriusFM
 			a_B != AssetClassB::UNDEFINED &&
 			a_t0 <= a_T &&
 		       	a_tau_min > 0 && a_P > 0);
+		       	
 
 		// Main Simulation Loop 
 		if ( L * P > m_MaxL * m_MaxP)
@@ -68,7 +85,7 @@ namespace SiriusFM
 
 			for (long l = 1; l < L; l++) 
 			{
-				if (a_A = a_isRN) 
+				if (IsRN) //if (a_A = a_isRN) 
 				{
 					double delta_r = (a_rateA -> r(a_A, y))
 					       	- (a_rateB -> r(a_B, y));
@@ -79,7 +96,7 @@ namespace SiriusFM
 				{
 					double mu0 = (a_diff -> Mu(Sp0,y));
 					double mu1 = (a_diff -> Mu(Sp1, y));
-				};
+				}
 				
 				double sigma0 = a_diff -> Sigma(Sp0, y);
 				double sigma1 = a_diff -> Sigma(Sp1, y);             	
@@ -104,8 +121,16 @@ namespace SiriusFM
 				path1 [l] = Sn1;
 				Sp0 = Sn0;
 				Sp1 = Sn1;
-			}; // end of loop
-
-			};
+			} // end of loop
+			
+			
+			
+			}
+			
+			m_L = L;
+			m_P = P;
+			
+			//In Simulate
 		}
-};
+	
+}

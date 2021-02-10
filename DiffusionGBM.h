@@ -15,9 +15,9 @@ namespace SiriusFM
 					throw invalid_argument("Incorrect values");
 					 };
 			};
-			double mu(double st, double t) {
+			double Mu(double st, double t) const {
 				return (st*(this -> m_mu) >= 0)? st*(this -> m_mu):0;};
-			double sigma(double st, double t){
+			double Sigma(double st, double t) const {
 				double sig = st*(this -> m_sigma); 
 				return sig>0 ? sig : 0;};
 	};
